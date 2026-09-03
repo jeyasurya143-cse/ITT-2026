@@ -1,0 +1,172 @@
+[24bcs043@mepcolinux ex3]$cat ex3.l
+%{
+#include <stdio.h>
+extern FILE *yyin;
+int post_inc_flag = 0;
+int post_dec_flag = 0;
+int expect_operand = 1;  /* 1 when a unary operator or primary expression is expected */
+%}
+
+%%
+
+"if" { printf("IF Keyword : %s\n", yytext); expect_operand = 1; }
+"else" { printf("ELSE Keyword : %s\n", yytext); expect_operand = 1; }
+"do" { printf("DO Keyword : %s\n", yytext); expect_operand = 1; }
+"while" { printf("WHILE Keyword : %s\n", yytext); expect_operand = 1; }
+"printf" { printf("PRINTF Keyword : %s\n", yytext); expect_operand = 1; }
+
+[a-zA-Z_][a-zA-Z0-9_]*[ \t\n]*"++" {
+    int id_len = 0;
+    while ((yytext[id_len] >= 'a' && yytext[id_len] <= 'z') ||
+           (yytext[id_len] >= 'A' && yytext[id_len] <= 'Z') ||
+           (yytext[id_len] >= '0' && yytext[id_len] <= '9') ||
+           yytext[id_len] == '_') {
+        id_len++;
+    }
+    yyless(id_len);
+    printf("Identifier : %s\n", yytext);
+    post_inc_flag = 1;
+    expect_operand = 0;
+}
+
+[a-zA-Z_][a-zA-Z0-9_]*[ \t\n]*"--" {
+    int id_len = 0;
+    while ((yytext[id_len] >= 'a' && yytext[id_len] <= 'z') ||
+           (yytext[id_len] >= 'A' && yytext[id_len] <= 'Z') ||
+           (yytext[id_len] >= '0' && yytext[id_len] <= '9') ||
+           yytext[id_len] == '_') {
+        id_len++;
+    }
+    yyless(id_len);
+    printf("Identifier : %s\n", yytext);
+    post_dec_flag = 1;
+    expect_operand = 0;
+}
+
+"++" {
+    if (post_inc_flag) {
+        printf("Post Increment Operator : %s\n", yytext);
+        post_inc_flag = 0;
+        expect_operand = 0;
+    } else {
+        printf("Pre Increment Operator : %s\n", yytext);
+        expect_operand = 1;
+    }
+}
+
+"--" {
+    if (post_dec_flag) {
+        printf("Post Decrement Operator : %s\n", yytext);
+        post_dec_flag = 0;
+        expect_operand = 0;
+    } else {
+        printf("Pre Decrement Operator : %s\n", yytext);
+        expect_operand = 1;
+    }
+}
+
+"==" { printf("Equal To Operator : %s\n", yytext); expect_operand = 1; }
+"!=" { printf("Not Equal To Operator : %s\n", yytext); expect_operand = 1; }
+">=" { printf("Greater Than or Equal Operator : %s\n", yytext); expect_operand = 1; }
+"<=" { printf("Less Than or Equal Operator : %s\n", yytext); expect_operand = 1; }
+
+"&&" { printf("Logical AND Operator : %s\n", yytext); expect_operand = 1; }
+"||" { printf("Logical OR Operator : %s\n", yytext); expect_operand = 1; }
+"!" { printf("Logical NOT Operator : %s\n", yytext); expect_operand = 1; }
+
+"<<=" { printf("Left Shift Assignment Operator : %s\n", yytext); expect_operand = 1; }
+">>=" { printf("Right Shift Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"+=" { printf("Add Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"-=" { printf("Subtract Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"*=" { printf("Multiply Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"/=" { printf("Divide Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"%=" { printf("Modulus Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"&=" { printf("Bitwise AND Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"|=" { printf("Bitwise OR Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"^=" { printf("Bitwise XOR Assignment Operator : %s\n", yytext); expect_operand = 1; }
+"=" { printf("Assignment Operator : %s\n", yytext); expect_operand = 1; }
+
+"**" { printf("Exponential Operator : %s\n", yytext); expect_operand = 1; }
+
+"<<" { printf("Left Shift Operator : %s\n", yytext); expect_operand = 1; }
+">>" { printf("Right Shift Operator : %s\n", yytext); expect_operand = 1; }
+
+"?" { printf("Ternary Question Mark : %s\n", yytext); expect_operand = 1; }
+":" { printf("Ternary Colon : %s\n", yytext); expect_operand = 1; }
+
+">" { printf("Greater Than Operator : %s\n", yytext); expect_operand = 1; }
+"<" { printf("Less Than Operator : %s\n", yytext); expect_operand = 1; }
+
+"+" {
+    if (expect_operand) {
+        printf("Unary Plus Operator : %s\n", yytext);
+        expect_operand = 1;
+    } else {
+        printf("Addition Operator : %s\n", yytext);
+        expect_operand = 1;
+    }
+}
+
+"-" {
+    if (expect_operand) {
+        printf("Unary Minus Operator : %s\n", yytext);
+        expect_operand = 1;
+    } else {
+        printf("Subtraction Operator : %s\n", yytext);
+        expect_operand = 1;
+    }
+}
+
+"*" { printf("Multiplication Operator : %s\n", yytext); expect_operand = 1; }
+"/" { printf("Division Operator : %s\n", yytext); expect_operand = 1; }
+"%" { printf("Modulus Operator : %s\n", yytext); expect_operand = 1; }
+
+"&" { printf("Bitwise AND Operator : %s\n", yytext); expect_operand = 1; }
+"|" { printf("Bitwise OR Operator : %s\n", yytext); expect_operand = 1; }
+"^" { printf("Bitwise XOR Operator : %s\n", yytext); expect_operand = 1; }
+"~" { printf("Bitwise NOT Operator : %s\n", yytext); expect_operand = 1; }
+
+";" { printf("semi colon : %s\n", yytext); expect_operand = 1; }
+
+"(" { printf("Left Parenthesis : %s\n", yytext); expect_operand = 1; }
+")" { printf("Right Parenthesis : %s\n", yytext); expect_operand = 0; }
+"{" { printf("Left Curly Bracket : %s\n", yytext); expect_operand = 1; }
+"}" { printf("Right Curly Bracket : %s\n", yytext); expect_operand = 0; }
+"[" { printf("Left Square Bracket : %s\n", yytext); expect_operand = 1; }
+"]" { printf("Right Square Bracket : %s\n", yytext); expect_operand = 0; }
+
+"\""([^\\\"]|\\.)*"\"" { printf("double quotes : %s\n", yytext); expect_operand = 0; }
+
+[0-9]+"."[0-9]+ { printf("Float : %s\n", yytext); expect_operand = 0; }
+[0-9]+ { printf("Number : %s\n", yytext); expect_operand = 0; }
+
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Identifier : %s\n", yytext); expect_operand = 0; }
+
+[ \t\n]+ { }
+
+. { printf("Unknown Symbol : %s\n", yytext); }
+
+%%
+
+int main()
+{
+    yyin = fopen("input.txt", "r");
+
+    if (yyin == NULL)
+    {
+        printf("Error: Cannot open input.txt\n");
+        return 1;
+    }
+
+    printf("LEXICAL ANALYSIS OUTPUT\n\n");
+
+    yylex();
+
+    fclose(yyin);
+    return 0;
+}
+
+int yywrap()
+{
+    return 1;
+}
