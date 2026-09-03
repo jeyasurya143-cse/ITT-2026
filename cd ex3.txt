@@ -166,6 +166,16 @@ int main()
     return 0;
 }
 
+do""
+{
+    x += 5;
+    x=-5
+    x=+1
+    count++;
+    --pre;
+    post++;
+    printf(x);
+} while (x < 20);
 int yywrap()
 {
     return 1;
