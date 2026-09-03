@@ -1,0 +1,86 @@
+[24bcs043@mepcolinux ex4]$cat doWhile.y
+%{
+#include <stdio.h>
+
+int yylex();
+void yyerror(char *s);
+%}
+
+%token DO WHILE ID NUM OP
+
+%%
+
+S : DO '{' STMT '}' WHILE '(' COND ')' ';'
+    {
+        printf("Valid do-while statement\n");
+    }
+    ;
+
+STMT : ID '=' EXPR ';'
+     ;
+
+EXPR : ID OP NUM
+     | ID OP ID
+     | NUM
+     ;
+
+COND : ID OP NUM
+     | ID OP ID
+     ;
+
+%%
+
+int main()
+{
+    yyparse();
+    return 0;
+}
+
+void yyerror(char *s)
+{
+    printf("Invalid do-while statement\n");
+}
+
+
+[24bcs043@mepcolinux ex4]$cat doWhile.y
+%{
+#include <stdio.h>
+
+int yylex();
+void yyerror(char *s);
+%}
+
+%token DO WHILE ID NUM OP
+
+%%
+
+S : DO '{' STMT '}' WHILE '(' COND ')' ';'
+    {
+        printf("Valid do-while statement\n");
+    }
+    ;
+
+STMT : ID '=' EXPR ';'
+     ;
+
+EXPR : ID OP NUM
+     | ID OP ID
+     | NUM
+     ;
+
+COND : ID OP NUM
+     | ID OP ID
+     ;
+
+%%
+
+int main()
+{
+    yyparse();
+    return 0;
+}
+
+void yyerror(char *s)
+{
+    printf("Invalid do-while statement\n");
+}
